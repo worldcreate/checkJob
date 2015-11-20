@@ -6,4 +6,5 @@ int main(void){
 	jt.print();
 	jt.checkJob();
 	jt.checkMachine();
+	jt.checkTechnicalOrder();
 }

@@ -3,11 +3,13 @@
 #include <stdio.h>
 #include <sstream>
 #include <iostream>
+#include <algorithm>
 
 JobTable::JobTable(){
 }
 
 JobTable::~JobTable(){
+	delete settingTable;
 }
 
 void JobTable::addMachine(char line[]){
@@ -26,6 +28,9 @@ void JobTable::addMachine(char line[]){
 
 void JobTable::input(){
 	int m,j;
+	char filename[256];
+	scanf("%s",filename);
+	settingTable=new SettingTable(filename);
 	scanf("%d*%d\n",&j,&m);
 	for(int i=0;i<m;i++){
 		char line[1024];
@@ -44,8 +49,26 @@ void JobTable::print(){
 	}
 }
 
-bool JobTable::checkTechnicalOrder(int job){
+void JobTable::checkTechnicalOrder(){
+	cout<<"============== TechnicalOrder check start =============="<<endl;
+	for(int i=0;i<table[0].size();i++){
+		cout<<i<<":"<<checkTechnicalOrder(i)<<endl;
+	}
+}
 
+bool JobTable::checkTechnicalOrder(int job){
+	vector<Job> line;
+	for(int i=0;i<table.size();i++){
+		line.push_back(table[i][job]);
+		line[i].machine=i;
+	}
+	sort(line.begin(),line.end());
+	bool isMatch=true;
+	for(int i=0;i<line.size();i++){
+		if(line[i].machine!=settingTable->table[job][i])
+			isMatch=false;
+	}
+	return !isMatch;
 }
 
 void JobTable::checkJob(){
@@ -64,7 +87,7 @@ bool JobTable::checkJob(int job){
 			bool r=false;
 			r=check(table[i][job],table[j][job]);
 			if(r)
-				cout<<"machine:"i<<":"<<j<<endl;
+				cout<<"machine:"<<i<<":"<<j<<endl;
 			ret|=r;
 		}
 	}
