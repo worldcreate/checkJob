@@ -9,8 +9,8 @@ using namespace std;
 class SettingTable{
 public:
 	SettingTable(char []);
-private:
 	vector<vector<int> >table;
+private:
 };
 
 #endif
